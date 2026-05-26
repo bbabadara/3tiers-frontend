@@ -1,10 +1,24 @@
 import React from 'react';
 
+const CATEGORY_COLORS = [
+  '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899',
+];
+
 function ProductItem({ product, onEdit, onDelete }) {
   return (
     <div className="product-item">
       <div className="product-info">
-        <h3 className="product-name">{product.nom}</h3>
+        <div className="product-name-row">
+          <h3 className="product-name">{product.nom}</h3>
+          {product.categorie && (
+            <span
+              className="product-category-badge"
+              style={{ backgroundColor: CATEGORY_COLORS[product.categorie.id % CATEGORY_COLORS.length] }}
+            >
+              {product.categorie.nom}
+            </span>
+          )}
+        </div>
         {product.description && (
           <p className="product-desc">{product.description}</p>
         )}

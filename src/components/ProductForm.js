@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { categoryService } from '../services/api';
 
-const initialFormState = { nom: '', description: '', prix: '', stock: '' };
+const initialFormState = { nom: '', description: '', prix: '', stock: '', categorieId: '' };
 
 function ProductForm({ onSubmit, initialData, onCancel }) {
   const [form, setForm] = useState(initialFormState);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    categoryService.getAll().then((res) => {
+      setCategories(res.data.data);
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (initialData) {
@@ -12,6 +20,7 @@ function ProductForm({ onSubmit, initialData, onCancel }) {
         description: initialData.description || '',
         prix: initialData.prix || '',
         stock: initialData.stock ?? '',
+        categorieId: initialData.categorieId ?? '',
       });
     } else {
       setForm(initialFormState);
@@ -84,6 +93,23 @@ function ProductForm({ onSubmit, initialData, onCancel }) {
               placeholder="0"
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="categorieId">Catégorie</label>
+            <select
+              id="categorieId"
+              name="categorieId"
+              value={form.categorieId}
+              onChange={handleChange}
+            >
+              <option value="">-- Sans catégorie --</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nom}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
